@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id>CSS</id>
+          </State>
+          <State>
+            <id>Code style issuesGo</id>
+          </State>
+          <State>
+            <id>Control flow issuesGo</id>
+          </State>
+          <State>
+            <id>Declaration redundancyGo</id>
+          </State>
+          <State>
+            <id>Declaration redundancyGo modules</id>
+          </State>
+          <State>
+            <id>Dev Container</id>
+          </State>
+          <State>
+            <id>ES2015 migration aidsJavaScript and TypeScript</id>
+          </State>
+          <State>
+            <id>Flow type checkerJavaScript and TypeScript</id>
+          </State>
+          <State>
+            <id>General</id>
+          </State>
+          <State>
+            <id>GeneralJavaScript and TypeScript</id>
+          </State>
+          <State>
+            <id>Go</id>
+          </State>
+          <State>
+            <id>Go modules</id>
+          </State>
+          <State>
+            <id>HTTP Client</id>
+          </State>
+          <State>
+            <id>Imports and dependenciesJavaScript and TypeScript</id>
+          </State>
+          <State>
+            <id>Internationalization</id>
+          </State>
+          <State>
+            <id>Invalid elementsCSS</id>
+          </State>
+          <State>
+            <id>JavaScript and TypeScript</id>
+          </State>
+          <State>
+            <id>Potentially confusing code constructsJavaScript and TypeScript</id>
+          </State>
+          <State>
+            <id>Potentially undesirable code constructsJavaScript and TypeScript</id>
+          </State>
+          <State>
+            <id>Probable bugsGo</id>
+          </State>
+          <State>
+            <id>Proofreading</id>
+          </State>
+          <State>
+            <id>Protocol Buffers</id>
+          </State>
+          <State>
+            <id>ReactJavaScript and TypeScript</id>
+          </State>
+          <State>
+            <id>SecurityGo</id>
+          </State>
+          <State>
+            <id>SecurityJavaScript and TypeScript</id>
+          </State>
+          <State>
+            <id>TypeScriptJavaScript and TypeScript</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>User defined</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+</project>
