@@ -57,21 +57,21 @@ Run the tool with the following options:
 
 To process a file containing URLs, run:  
 ```bash
-./cautc.exe --path=urls.txt
+./cautc.exe --path=sites.txt
 ```
 
 ### Custom Size Unit
 
 To measure content size in kilobytes, use the following:  
 ```bash
-./cautc.exe --path=urls.txt --size=kb
+./cautc.exe --path=sites.txt --size=kb
 ````
 
 ### Save Results to a File
 
 To save results to a file while processing content size in characters:  
 ```bash
-./cautc.exe --path=urls.txt --size=chars --save=true
+./cautc.exe --path=sites.txt --size=chars --save=true
 ```
 
 ---
