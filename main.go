@@ -9,19 +9,16 @@ import (
 )
 
 func main() {
-	// Парсинг флагов
-	pathFlag := flag.String("path", "", "Путь к файлу с URL-адресами (относительный или абсолютный)")
-	sizeFlag := flag.String("size", "bytes", "Единицы измерения размера контента: bytes, kb, mb, chars")
-	saveFlag := flag.Bool("save", false, "Сохранить результат в файл (true/false)")
+	pathFlag := flag.String("path", "", "Path to the file containing URLs (relative or absolute)")
+	sizeFlag := flag.String("size", "bytes", "Content size unit: bytes, kb, mb, chars")
+	saveFlag := flag.Bool("save", false, "Save results to a file (true/false)")
 
 	flag.Parse()
 
-	// Проверка на обязательные параметры
 	if *pathFlag == "" {
-		log.Fatal("Флаг --path обязателен")
+		log.Fatal("The --path flag is required")
 	}
 
-	// Определение единицы измерения
 	var sizeUnit SizeUnit
 	switch strings.ToLower(*sizeFlag) {
 	case "kb":
@@ -33,33 +30,29 @@ func main() {
 	case "bytes":
 		sizeUnit = Bytes
 	default:
-		log.Fatalf("Неверное значение для --size: %s. Используйте bytes, kb, mb или chars", *sizeFlag)
+		log.Fatalf("Invalid value for --size: %s. Use bytes, kb, mb, or chars", *sizeFlag)
 	}
 
-	// Обработка файла
 	links, err := ProcessFile(*pathFlag)
 	if err != nil {
-		log.Fatalf("Ошибка обработки файла: %v", err)
+		log.Fatalf("Error processing file: %v", err)
 	}
 	if len(links) == 0 {
-		log.Fatal("В файле не найдено валидных URL-адресов")
+		log.Fatal("No valid URLs found in the file")
 	}
-	fmt.Println("Обработка урлов закончена.")
+	fmt.Println("URL processing completed.")
 
-	// Обработка сайтов
 	results := ProcessSites(links, sizeUnit)
-	fmt.Println("Обработка сайтов закончена.")
+	fmt.Println("Site processing completed.")
 
-	// Вывод результатов
 	DisplayResults(results, sizeUnit)
 
-	// Сохранение результатов, если требуется
 	if *saveFlag {
 		outputFile := filepath.Join(filepath.Dir(*pathFlag), "results.txt")
 		err := SaveResultsToFile(results, sizeUnit, outputFile)
 		if err != nil {
-			log.Fatalf("Ошибка сохранения результатов в файл: %v", err)
+			log.Fatalf("Error saving results to file: %v", err)
 		}
-		fmt.Printf("Результаты сохранены в файл: %s\n", outputFile)
+		fmt.Printf("Results have been saved to file: %s\n", outputFile)
 	}
 }
