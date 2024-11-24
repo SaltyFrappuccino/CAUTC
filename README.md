@@ -1,9 +1,10 @@
 # CAUTC - Content Analysis and URL Testing CLI Tool 🚀
 
-[![Go Version](https://img.shields.io/github/go-mod/go-version/golang/go)](https://golang.org/)  
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/SaltyFrappuccino/CAUTC/actions)  
-[![License](https://img.shields.io/badge/license-GNU%20GPLv3-blue)](https://www.gnu.org/licenses/gpl-3.0.html)
-[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)](https://github.com/your-repo/CAUTC/issues)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/SaltyFrappuccino/CAUTC) <br/>
+[![License](https://img.shields.io/badge/license-GNU%20GPLv3-blue)](https://www.gnu.org/licenses/gpl-3.0.html) <br/>
+![GitHub repo size](https://img.shields.io/github/repo-size/SaltyFrappuccino/CAUTC) <br/>
+![GitHub last commit](https://img.shields.io/github/last-commit/SaltyFrappuccino/CAUTC)
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)](https://github.com/your-repo/CAUTC/issues) <br/>
 
 CAUTC is a command-line tool designed for analyzing the content size and response time of URLs. It supports multiple content size units, processes files with lists of URLs, and optionally saves results to a file.
 
@@ -117,7 +118,6 @@ The project is organized as follows:
 ## 🤝 Contributing
 
 We welcome contributions! Feel free to fork the project, open an issue, or submit a pull request. 
-<br/>Please ensure your code adheres to the project's coding standards.
 
 ---
 
