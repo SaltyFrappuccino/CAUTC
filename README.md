@@ -3,7 +3,7 @@
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/SaltyFrappuccino/CAUTC) <br/>
 [![License](https://img.shields.io/badge/license-GNU%20GPLv3-blue)](https://www.gnu.org/licenses/gpl-3.0.html) <br/>
 ![GitHub repo size](https://img.shields.io/github/repo-size/SaltyFrappuccino/CAUTC) <br/>
-![GitHub last commit](https://img.shields.io/github/last-commit/SaltyFrappuccino/CAUTC)
+![GitHub last commit](https://img.shields.io/github/last-commit/SaltyFrappuccino/CAUTC) <br/>
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)](https://github.com/your-repo/CAUTC/issues) <br/>
 
 CAUTC is a command-line tool designed for analyzing the content size and response time of URLs. It supports multiple content size units, processes files with lists of URLs, and optionally saves results to a file.
