@@ -1,8 +1,11 @@
 package main
 
 import (
+	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -88,7 +91,7 @@ func ProcessSite(url string, sizeUnit SizeUnit) ProcessResult {
 //     content size (in the specified unit), and download duration. The results are in the same
 //     order as the input URLs. If an error occurs during download for any URL, its corresponding
 //     ProcessResult will have a Size field set to -1.
-func ProcessSites(urls []string, sizeUnit SizeUnit, saveFlag bool, outputFile string) {
+func ProcessSites(urls []string, sizeUnit SizeUnit, saveFlag bool, outputFile string, depth int, exportType string) {
 	unitStr := "bytes"
 	switch sizeUnit {
 	case KB:
@@ -101,7 +104,13 @@ func ProcessSites(urls []string, sizeUnit SizeUnit, saveFlag bool, outputFile st
 
 	var results []ProcessResult
 
-	for _, url := range urls {
+	var processURL func(url string, currentDepth int)
+	processURL = func(url string, currentDepth int) {
+		if currentDepth > depth {
+			return
+		}
+
+		log.Printf("Processing URL (Depth %d): %s", currentDepth, url)
 		result := ProcessSite(url, sizeUnit)
 		results = append(results, result)
 
@@ -110,16 +119,100 @@ func ProcessSites(urls []string, sizeUnit SizeUnit, saveFlag bool, outputFile st
 		} else {
 			fmt.Printf("URL: %s - Size: %d %s - Time: %v\n", result.URL, result.Size, unitStr, result.Duration)
 		}
+
+		if currentDepth < depth {
+			content, err := DownloadContent(url)
+			if err != nil {
+				log.Printf("Error downloading content for nested links from %s: %v", url, err)
+				return
+			}
+
+			nestedLinks := ExtractAndNormalizeLinks(string(content))
+			for _, nestedLink := range nestedLinks {
+				processURL(nestedLink, currentDepth+1)
+			}
+		}
+	}
+
+	for _, url := range urls {
+		processURL(url, 1)
 	}
 
 	if saveFlag {
-		err := SaveResultsToFile(results, sizeUnit, outputFile)
-		if err != nil {
-			fmt.Printf("Error saving results to file: %v\n", err)
-		} else {
-			fmt.Printf("Results have been saved to file: %s\n", outputFile)
+		switch exportType {
+		case "txt":
+			err := SaveResultsToFile(results, sizeUnit, outputFile)
+			if err != nil {
+				log.Printf("Error saving results to TXT file: %v", err)
+			} else {
+				log.Printf("Results saved to TXT file: %s", outputFile)
+			}
+		case "json":
+			err := SaveResultsToJSON(results, outputFile)
+			if err != nil {
+				log.Printf("Error saving results to JSON file: %v", err)
+			} else {
+				log.Printf("Results saved to JSON file: %s", outputFile)
+			}
+		case "csv":
+			err := SaveResultsToCSV(results, outputFile)
+			if err != nil {
+				log.Printf("Error saving results to CSV file: %v", err)
+			} else {
+				log.Printf("Results saved to CSV file: %s", outputFile)
+			}
+		default:
+			log.Printf("Unsupported export type: %s. Using TXT as default.", exportType)
+			err := SaveResultsToFile(results, sizeUnit, outputFile)
+			if err != nil {
+				log.Printf("Error saving results to TXT file: %v", err)
+			} else {
+				log.Printf("Results saved to TXT file: %s", outputFile)
+			}
 		}
 	}
+
+	log.Println("Sites processing completed.")
+}
+
+func SaveResultsToJSON(results []ProcessResult, filename string) error {
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	encoder := json.NewEncoder(file)
+	encoder.SetIndent("", "  ")
+	return encoder.Encode(results)
+}
+
+func SaveResultsToCSV(results []ProcessResult, filename string) error {
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+
+	if err := writer.Write([]string{"URL", "Size", "Duration"}); err != nil {
+		return err
+	}
+
+	for _, result := range results {
+		record := []string{
+			result.URL,
+			fmt.Sprintf("%d", result.Size),
+			result.Duration.String(),
+		}
+		if err := writer.Write(record); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // DisplayResults prints the processing results for multiple URLs to the console.

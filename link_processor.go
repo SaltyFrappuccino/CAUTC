@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 )
 
@@ -30,12 +31,13 @@ func ExtractAndNormalizeLinks(content string) []string {
 	var links []string
 	scanner := bufio.NewScanner(strings.NewReader(content))
 
+	urlRegex := regexp.MustCompile(`https?://[^\s"']+`)
+
 	for scanner.Scan() {
 		line := scanner.Text()
-		words := strings.Fields(line)
-
-		for _, word := range words {
-			if link := normalizeLink(word); link != "" {
+		matches := urlRegex.FindAllString(line, -1)
+		for _, match := range matches {
+			if link := normalizeLink(match); link != "" {
 				links = append(links, link)
 			}
 		}
@@ -56,10 +58,10 @@ func normalizeLink(word string) string {
 
 	u.Scheme = "https"
 
-	return fmt.Sprintf("https://%s", u.Hostname())
+	return u.String()
 }
 
-func ProcessFile_t(filePath string) ([]string, error) {
+func ProcessfileT(filePath string) ([]string, error) {
 	content, err := FindAndReadFile(filePath)
 	if err != nil {
 		return nil, err
