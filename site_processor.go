@@ -5,7 +5,6 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"sync"
 	"time"
 )
 
@@ -89,20 +88,38 @@ func ProcessSite(url string, sizeUnit SizeUnit) ProcessResult {
 //     content size (in the specified unit), and download duration. The results are in the same
 //     order as the input URLs. If an error occurs during download for any URL, its corresponding
 //     ProcessResult will have a Size field set to -1.
-func ProcessSites(urls []string, sizeUnit SizeUnit) []ProcessResult {
-	results := make([]ProcessResult, len(urls))
-	var wg sync.WaitGroup
-
-	for i, url := range urls {
-		wg.Add(1)
-		go func(i int, url string) {
-			defer wg.Done()
-			results[i] = ProcessSite(url, sizeUnit)
-		}(i, url)
+func ProcessSites(urls []string, sizeUnit SizeUnit, saveFlag bool, outputFile string) {
+	unitStr := "bytes"
+	switch sizeUnit {
+	case KB:
+		unitStr = "KB"
+	case MB:
+		unitStr = "MB"
+	case Chars:
+		unitStr = "characters"
 	}
 
-	wg.Wait()
-	return results
+	var results []ProcessResult
+
+	for _, url := range urls {
+		result := ProcessSite(url, sizeUnit)
+		results = append(results, result)
+
+		if result.Size == -1 {
+			fmt.Printf("URL: %s - Error downloading content\n", result.URL)
+		} else {
+			fmt.Printf("URL: %s - Size: %d %s - Time: %v\n", result.URL, result.Size, unitStr, result.Duration)
+		}
+	}
+
+	if saveFlag {
+		err := SaveResultsToFile(results, sizeUnit, outputFile)
+		if err != nil {
+			fmt.Printf("Error saving results to file: %v\n", err)
+		} else {
+			fmt.Printf("Results have been saved to file: %s\n", outputFile)
+		}
+	}
 }
 
 // DisplayResults prints the processing results for multiple URLs to the console.
@@ -145,35 +162,36 @@ func DisplayResults(results []ProcessResult, sizeUnit SizeUnit) {
 // Returns:
 //   - error: An error if file creation or writing fails, or nil if the operation is successful.
 func SaveResultsToFile(results []ProcessResult, sizeUnit SizeUnit, filename string) error {
-    file, err := os.Create(filename)
-    if err != nil {
-        return err
-    }
-    defer func(file *os.File) {
-        err := file.Close()
-        if err != nil {}
-    }(file)
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+		}
+	}(file)
 
-    unitStr := "bytes"
-    switch sizeUnit {
-    case KB:
-        unitStr = "KB"
-    case MB:
-        unitStr = "MB"
-    case Chars:
-        unitStr = "characters"
-    }
+	unitStr := "bytes"
+	switch sizeUnit {
+	case KB:
+		unitStr = "KB"
+	case MB:
+		unitStr = "MB"
+	case Chars:
+		unitStr = "characters"
+	}
 
-    for _, result := range results {
-        if result.Size == -1 {
-            _, err = fmt.Fprintf(file, "%s - Error downloading content - %v\n", result.URL, result.Duration)
-        } else {
-            _, err = fmt.Fprintf(file, "%s - %d %s - %v\n", result.URL, result.Size, unitStr, result.Duration)
-        }
-        if err != nil {
-            return err
-        }
-    }
+	for _, result := range results {
+		if result.Size == -1 {
+			_, err = fmt.Fprintf(file, "%s - Error downloading content - %v\n", result.URL, result.Duration)
+		} else {
+			_, err = fmt.Fprintf(file, "%s - %d %s - %v\n", result.URL, result.Size, unitStr, result.Duration)
+		}
+		if err != nil {
+			return err
+		}
+	}
 
-    return nil
+	return nil
 }

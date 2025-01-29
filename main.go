@@ -33,26 +33,15 @@ func main() {
 		log.Fatalf("Invalid value for --size: %s. Use bytes, kb, mb, or chars", *sizeFlag)
 	}
 
-	links, err := ProcessFile(*pathFlag)
+	links, err := ProcessFile_t(*pathFlag)
 	if err != nil {
 		log.Fatalf("Error processing file: %v", err)
 	}
 	if len(links) == 0 {
 		log.Fatal("No valid URLs found in the file")
 	}
-	fmt.Println("URL processing completed.")
 
-	results := ProcessSites(links, sizeUnit)
-	fmt.Println("Site processing completed.")
-
-	DisplayResults(results, sizeUnit)
-
-	if *saveFlag {
-		outputFile := filepath.Join(filepath.Dir(*pathFlag), "results.txt")
-		err := SaveResultsToFile(results, sizeUnit, outputFile)
-		if err != nil {
-			log.Fatalf("Error saving results to file: %v", err)
-		}
-		fmt.Printf("Results have been saved to file: %s\n", outputFile)
-	}
+	outputFile := filepath.Join(filepath.Dir(*pathFlag), "results.txt")
+	ProcessSites(links, sizeUnit, *saveFlag, outputFile)
+	fmt.Println("Sites processing completed.")
 }
