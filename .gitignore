@@ -5,6 +5,8 @@
 *.so
 *.dylib
 cautc
+result
+results
 
 # Test binary
 *.test
